@@ -32,14 +32,13 @@ func main() {
 	logs.InitLogs()
 	defer logs.FlushLogs()
 
-	klog.Error("changlu start NewCloudControllerManagerOptions")
 	ccmOptions, err := options.NewCloudControllerManagerOptions()
 	if err != nil {
 		klog.Fatalf("unable to initialize command options: %v", err)
 	}
 
 	fss := cliflag.NamedFlagSets{}
-	klog.Error("changlu start NewCloudControllerManagerCommand")
+
 	command := app.NewCloudControllerManagerCommand(ccmOptions, cloudInitializer, app.DefaultInitFuncConstructors, fss, wait.NeverStop)
 
 	pflag.CommandLine.SetNormalizeFunc(cliflag.WordSepNormalizeFunc)
@@ -55,7 +54,6 @@ func main() {
 }
 
 func cloudInitializer(config *config.CompletedConfig) cloudprovider.Interface {
-	klog.Error("changlu start cloudInitializer")
 	cloudConfig := config.ComponentConfig.KubeCloudShared.CloudProvider
 	logPrint("cloudConfig: ", cloudConfig)
 	// initialize cloud provider with the cloud provider name and config file provided

@@ -31,15 +31,6 @@ const (
 	ServiceAnnotationLoadBalancerHealthCheckHealthNum    = "service.beta.kubernetes.io/tencentcloud-loadbalancer-health-check-health-num"
 	ServiceAnnotationLoadBalancerHealthCheckUnHealthNum  = "service.beta.kubernetes.io/tencentcloud-loadbalancer-health-check-un-health-num"
 
-	//ServiceAnnotationLoadBalancerListenerPort            = "service.beta.kubernetes.io/tencentcloud-loadbalancer-listener-port"
-	//ServiceAnnotationLoadBalancerHealthCheckPort         = "service.beta.kubernetes.io/tencentcloud-loadbalancer-health-check-port"
-	//ServiceAnnotationLoadBalancerListenerProtocol        = "service.beta.kubernetes.io/tencentcloud-loadbalancer-listener-protocol"
-	//ServiceAnnotationLoadBalancerListenerHttpRules       = "service.beta.kubernetes.io/tencentcloud-loadbalancer-listener-http-rules"
-	//ServiceAnnotationLoadBalancerHealthCheckHttpCode     = "service.beta.kubernetes.io/tencentcloud-loadbalancer-health-check-http-code"
-	//ServiceAnnotationLoadBalancerHealthCheckHttpPath     = "service.beta.kubernetes.io/tencentcloud-loadbalancer-health-check-http-path"
-	//ServiceAnnotationLoadBalancerHealthCheckHttpDomain   = "service.beta.kubernetes.io/tencentcloud-loadbalancer-health-check-http-domain"
-	//ServiceAnnotationLoadBalancerHealthCheckHttpMethod   = "service.beta.kubernetes.io/tencentcloud-loadbalancer-health-check-http-method"
-
 	nodeLabelKeyOfLoadBalancerDefault   = "kubernetes.io/role"
 	nodeLabelValueOfLoadBalancerDefault = "node"
 )
@@ -52,8 +43,6 @@ var (
 	cacheNamePreCLBListener = "clb_listener_id_"
 	//cacheNamePreCLB: cache key name pre for clb id
 	cacheNamePreCLB = "clb_id_"
-	//loadBalancerPassToTarget: Target是否放通来自CLB的流量。开启放通（true）：只验证CLB上的安全组；不开启放通（false）：需同时验证CLB和后端实例上的安全组。
-	loadBalancerPassToTarget = true
 )
 
 // getLoadBalancerName return LoadBalancer Name for service
@@ -433,12 +422,10 @@ func (cloud *Cloud) ensureLoadBalancerBackends(ctx context.Context, clusterName 
 						}
 					}
 				}
-				nodeLanIps = append(nodeLanIps, node.Name)
 			}
 		}
 	}
 
-	klog.Errorf("changlu nodeLanIps %v ", nodeLanIps)
 	if len(nodeLanIps) == 0 {
 		klog.Warningf("tencentcloud.ensureLoadBalancerBackends: return error: can't found nodes base on label: " + cloud.getNodeLabelKey(service) + "=" + cloud.getNodeLabelValue(service) + "\n")
 		return errors.New("can't found nodes base on label: " + cloud.getNodeLabelKey(service) + "=" + cloud.getNodeLabelValue(service))
@@ -683,8 +670,6 @@ func (cloud *Cloud) createLoadBalancer(ctx context.Context, clusterName string, 
 	request.LoadBalancerName = common.StringPtr(loadBalancerName)
 	request.VpcId = common.StringPtr(cloud.txConfig.VpcId)
 	request.Tags = cloud.getLBTags(ctx, service)
-	//request.LoadBalancerPassToTarget = &loadBalancerPassToTarget
-	klog.Errorf("changlu clb request %v ", request)
 
 	response, err := cloud.clb.CreateLoadBalancer(request)
 	if _, ok := err.(*cloudErrors.TencentCloudSDKError); ok {
