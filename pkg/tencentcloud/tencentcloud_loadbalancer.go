@@ -714,7 +714,7 @@ func (cloud *Cloud) getLBTags(ctx context.Context, service *v1.Service) []*clb.T
 
 // buildHealthCheck build load balancer HealthCheck
 func (cloud *Cloud) buildHealthCheck(service *v1.Service) *clb.HealthCheck {
-	var healthSwitch int64 = 1
+	var healthSwitch int64 = 0
 	//var sourceType int64 = 1
 	var timeout int64 = 2
 	var intervalTime int64 = 5
